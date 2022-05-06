@@ -1,16 +1,14 @@
 package com.example.domain.tasks;
 
-import com.sun.tools.javac.comp.Todo;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class CountTriplets {
+
     public static List<Long> LIST = new ArrayList<>();
+    public static List<Long> LIST2 = new ArrayList<>();
 
     public static void main(String[] arg) {
         LIST.add(1L);
@@ -20,35 +18,47 @@ public class CountTriplets {
         LIST.add(27L);
         LIST.add(81L);
 
+        LIST2.add(1L);
+        LIST2.add(2L);
+        LIST2.add(2L);
+        LIST2.add(4L);
+
+        System.out.println(countTriplets(LIST, 3L));
+
     }
 
-    static long countTriplets(List<Long> arr, long r) {
-        Map<Long, Integer> prevMap = new HashMap<>();
-        Map<Long, Integer> nextMap = new HashMap<>();
-        int counter = 0;
+    public static Long countTriplets(List<Long> arr, long r) {
+        Map<Long, Long> prevMap = new HashMap<>();
+        Map<Long, Long> nextMap = new HashMap<>();
+        long sum = 0;
 
         for (int i = 0; i < arr.size(); i++) {
-            Long key = arr.get(i);
+            Long cur = arr.get(i);
+            nextMap.put(cur, nextMap.getOrDefault(cur, 0L) + 1);
+        }
 
-            if (nextMap.containsKey(key)) {
-                int value = nextMap.get(key);
-                value++;
-                nextMap.put(key, value);
-            } else {
-                nextMap.put(key, 1);
+        for (int i = 0; i < arr.size(); i++) {
+            Long cur = arr.get(i);
+            Long leftCounter = 0L;
+            Long rightCounter = 0L;
+
+            nextMap.put(cur, nextMap.getOrDefault(cur, 0L) - 1);
+
+            if (prevMap.containsKey(cur / r) && cur % r == 0) {
+                leftCounter = prevMap.get(cur / r);
             }
 
+            if (nextMap.containsKey(cur * r)) {
+                rightCounter = nextMap.get(cur * r);
+            }
+
+            sum += leftCounter * rightCounter;
+
+            prevMap.put(cur, prevMap.getOrDefault(cur, 0L) + 1);
+
         }
 
-        List<Long> keys = new ArrayList<>(nextMap.keySet());
-
-        for (int i = 0; i < keys.size(); i++) {
-            Long key = keys.get(i);
-            Long prev = key / r;
-            Long next = key * r;
-
-            if()
-        }
+        return sum;
     }
 
     public static boolean isMemberOfGeometricProgression(Long base, Long value, Long r) {
